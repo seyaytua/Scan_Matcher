@@ -158,3 +158,23 @@ MIT License
 ---
 
 Made with Flutter 💙
+
+## 🌐 GitHub Pages セットアップ
+
+このリポジトリをGitHub Pagesで公開するには：
+
+### 手順
+
+1. **Settings** → **Pages** を開く
+2. **Source** で以下を選択：
+   - Branch: `main`
+   - Folder: `/ (root)`
+3. **Save** をクリック
+4. 数分待つとデプロイ完了
+5. https://seyaytua.github.io/Scan_Matcher/ にアクセス
+
+### トラブルシューティング
+
+- **404エラー**: Actionsタブでデプロイ状況を確認
+- **Actionsが動かない**: Settings → Actions → General で "Read and write permissions" を有効化
+
