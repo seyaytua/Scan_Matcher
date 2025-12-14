@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'providers/scan_provider.dart';
 import 'screens/file_list_screen.dart';
-import 'screens/scan_screen.dart';
+import 'screens/region_mapping_screen.dart';
 import 'screens/camera_scan_screen.dart';
 import 'screens/results_screen.dart';
 import 'utils/responsive_layout.dart';
@@ -54,7 +54,7 @@ class _MainScreenState extends State<MainScreen> {
 
   final List<Widget> _screens = [
     const FileListScreen(),
-    const ScanScreen(),
+    const RegionMappingScreen(),
     const CameraScanScreen(),
     const ResultsScreen(),
   ];

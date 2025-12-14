@@ -9,6 +9,9 @@ class ScanFile {
   final Uint8List fileData;
   final DateTime uploadedAt;
   
+  // スキャン範囲（複数の範囲を保存可能）
+  List<ScanRegion> scanRegions;
+  
   // スキャン結果
   String? scannedCode;
   bool? isMatched;
@@ -22,11 +25,12 @@ class ScanFile {
     required this.fileSize,
     required this.fileData,
     required this.uploadedAt,
+    List<ScanRegion>? scanRegions,
     this.scannedCode,
     this.isMatched,
     this.matchResult,
     this.status = ScanStatus.pending,
-  });
+  }) : scanRegions = scanRegions ?? [];
 
   /// ファイルサイズを人間が読みやすい形式で取得
   String get fileSizeFormatted {
@@ -67,6 +71,7 @@ class ScanFile {
     int? fileSize,
     Uint8List? fileData,
     DateTime? uploadedAt,
+    List<ScanRegion>? scanRegions,
     String? scannedCode,
     bool? isMatched,
     String? matchResult,
@@ -79,6 +84,7 @@ class ScanFile {
       fileSize: fileSize ?? this.fileSize,
       fileData: fileData ?? this.fileData,
       uploadedAt: uploadedAt ?? this.uploadedAt,
+      scanRegions: scanRegions ?? this.scanRegions,
       scannedCode: scannedCode ?? this.scannedCode,
       isMatched: isMatched ?? this.isMatched,
       matchResult: matchResult ?? this.matchResult,

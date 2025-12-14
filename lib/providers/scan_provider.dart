@@ -57,6 +57,37 @@ class ScanProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  /// ファイルに範囲を追加
+  void addRegionToFile(String fileId, ScanRegion region) {
+    final fileIndex = _files.indexWhere((f) => f.id == fileId);
+    if (fileIndex == -1) return;
+
+    final updatedRegions = List<ScanRegion>.from(_files[fileIndex].scanRegions)
+      ..add(region);
+    _files[fileIndex] = _files[fileIndex].copyWith(scanRegions: updatedRegions);
+    notifyListeners();
+  }
+
+  /// ファイルから範囲を削除
+  void removeRegionFromFile(String fileId, int regionIndex) {
+    final fileIndex = _files.indexWhere((f) => f.id == fileId);
+    if (fileIndex == -1) return;
+
+    final updatedRegions = List<ScanRegion>.from(_files[fileIndex].scanRegions)
+      ..removeAt(regionIndex);
+    _files[fileIndex] = _files[fileIndex].copyWith(scanRegions: updatedRegions);
+    notifyListeners();
+  }
+
+  /// ファイルのすべての範囲をクリア
+  void clearRegionsForFile(String fileId) {
+    final fileIndex = _files.indexWhere((f) => f.id == fileId);
+    if (fileIndex == -1) return;
+
+    _files[fileIndex] = _files[fileIndex].copyWith(scanRegions: []);
+    notifyListeners();
+  }
+
   /// 指定したファイルをスキャン
   Future<void> scanFile(String fileId) async {
     final fileIndex = _files.indexWhere((f) => f.id == fileId);
@@ -67,11 +98,28 @@ class ScanProvider with ChangeNotifier {
       _files[fileIndex] = _files[fileIndex].copyWith(status: ScanStatus.scanning);
       notifyListeners();
 
-      // バーコードスキャン実行
-      final scannedCode = await _barcodeService.scanBarcode(
-        _files[fileIndex].fileData,
-        _currentRegion,
-      );
+      // ファイルに指定された範囲を使用、なければグローバル範囲を使用
+      final regions = _files[fileIndex].scanRegions.isNotEmpty
+          ? _files[fileIndex].scanRegions
+          : (_currentRegion != null ? [_currentRegion!] : <ScanRegion>[]);
+
+      // バーコードスキャン実行（複数範囲に対応）
+      String? scannedCode;
+      for (final region in regions) {
+        scannedCode = await _barcodeService.scanBarcode(
+          _files[fileIndex].fileData,
+          region,
+        );
+        if (scannedCode != null) break; // 最初に見つかったコードを使用
+      }
+
+      // 範囲が指定されていない場合は全体をスキャン
+      if (regions.isEmpty) {
+        scannedCode = await _barcodeService.scanBarcode(
+          _files[fileIndex].fileData,
+          null,
+        );
+      }
 
       // 結果を更新
       if (scannedCode != null) {
