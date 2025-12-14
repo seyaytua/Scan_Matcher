@@ -47,9 +47,6 @@ dependencies:
   # Image Processing
   image: ^4.3.0
   
-  # PDF Rendering (Web compatible)
-  pdf_render: ^1.4.12
-  
   # Local Storage
   shared_preferences: 2.5.3
   
