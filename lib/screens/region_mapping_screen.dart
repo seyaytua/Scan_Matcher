@@ -394,15 +394,49 @@ class _RegionMappingScreenState extends State<RegionMappingScreen> {
               'PDFプレビューは未対応',
               style: TextStyle(color: Colors.grey),
             ),
+            const SizedBox(height: 16),
+            const Text(
+              '範囲指定は画像ファイルのみ対応しています',
+              style: TextStyle(color: Colors.orange, fontSize: 12),
+              textAlign: TextAlign.center,
+            ),
           ],
         ),
       );
     }
 
-    // 画像ファイルの表示
+    // 画像ファイルの表示（エラーハンドリング付き）
     return Image.memory(
       file.fileData,
       fit: BoxFit.contain,
+      errorBuilder: (context, error, stackTrace) {
+        return Container(
+          padding: const EdgeInsets.all(48),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.error_outline, size: 80, color: Colors.orange),
+              const SizedBox(height: 16),
+              Text(
+                file.fileName,
+                style: const TextStyle(fontSize: 16),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 8),
+              const Text(
+                '画像の読み込みに失敗しました',
+                style: TextStyle(color: Colors.red),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'エラー: ${error.toString()}',
+                style: const TextStyle(color: Colors.grey, fontSize: 12),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 

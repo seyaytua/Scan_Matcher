@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../providers/scan_provider.dart';
 import '../models/scan_file.dart';
 import '../utils/responsive_layout.dart';
+import 'file_preview_dialog.dart';
 
 /// ファイル一覧画面
 class FileListScreen extends StatelessWidget {
@@ -227,6 +228,7 @@ class FileListScreen extends StatelessWidget {
       elevation: 2,
       margin: const EdgeInsets.only(bottom: 12),
       child: ListTile(
+        onTap: () => FilePreviewDialog.show(context, file),
         leading: CircleAvatar(
           backgroundColor: statusColor.withValues(alpha: 0.2),
           child: Icon(_getFileIcon(file.fileType), color: statusColor),
@@ -260,11 +262,23 @@ class FileListScreen extends StatelessWidget {
             const SizedBox(width: 8),
             PopupMenuButton<String>(
               onSelected: (value) {
-                if (value == 'delete') {
+                if (value == 'preview') {
+                  FilePreviewDialog.show(context, file);
+                } else if (value == 'delete') {
                   provider.removeFile(file.id);
                 }
               },
               itemBuilder: (context) => [
+                const PopupMenuItem(
+                  value: 'preview',
+                  child: Row(
+                    children: [
+                      Icon(Icons.visibility, color: Colors.blue),
+                      SizedBox(width: 8),
+                      Text('プレビュー'),
+                    ],
+                  ),
+                ),
                 const PopupMenuItem(
                   value: 'delete',
                   child: Row(
